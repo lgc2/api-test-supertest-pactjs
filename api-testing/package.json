@@ -1,0 +1,19 @@
+{
+  "name": "sample-supertest-api-testing",
+  "version": "1.0.0",
+  "description": "Testes de API com Supertest",
+  "scripts": {
+    "test": "jest",
+    "test:healthCheck": "jest --testNamePattern=Healthcheck",
+    "test:e2e": "jest --testNamePattern=E2E"
+  },
+  "author": "lgc2",
+  "license": "ISC",
+  "dependencies": {
+    "@types/jest": "^29.2.4",
+    "dotenv": "^16.0.3",
+    "jest": "^29.3.1",
+    "jest-html-reporters": "^3.0.11",
+    "supertest": "^6.3.3"
+  }
+}
