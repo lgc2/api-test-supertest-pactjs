@@ -21,7 +21,7 @@ describe('Customers Resource', () => {
         token = await getAccessToken("admin", "admin")
     })
 
-    it('(E2E) should register an addres', async () => {
+    it('(E2E) should register an customer', async () => {
         const adressId = await postAddress(token, address1, address2, city, state, zip)
 
         await req(API_URL)
