@@ -1,5 +1,5 @@
 const req = require('supertest');
-const { getAccessToken, postAddress } = require('../utils/request');
+const { getAccessToken, postAddress, postCostumer } = require('../utils/request');
 const API_URL = process.env.API_URL
 
 describe('Customers Resource', () => {
@@ -47,6 +47,20 @@ describe('Customers Resource', () => {
                 expect(response.body.firstName).toEqual(firstname)
                 expect(response.body.lastName).toEqual(lastname)
                 expect(response.body.phone).toEqual(phone)
+            })
+    })
+
+    it('(E2E) should list customers', async () => {
+        const adressId = await postAddress(token, address1, address2, city, state, zip)
+        const customerId = await postCostumer(token, adressId, email, firstname, lastname, phone)
+
+        await req(API_URL)
+            .get('/customers')
+            .set('Authorization', `Bearer ${token}`)
+            .then(response => {
+                expect(response.statusCode).toEqual(200)
+                expect(response.body).toBeInstanceOf(Array)
+                expect(JSON.stringify(response.body)).toContain(customerId)
             })
     })
 

@@ -31,4 +31,23 @@ let postAddress = (token, address1, address2, city, state, zip) => {
         })
 }
 
-module.exports = { getAccessToken, postAddress }
+let postCostumer = (token, addressId, email, firstname, lastname, phone) => {
+    return req(API_URL)
+        .post('/customers')
+        .send({
+            "address": {
+                "id": addressId
+            },
+            "email": email,
+            "firstName": firstname,
+            "lastName": lastname,
+            "phone": phone
+        })
+        .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${token}`)
+        .then(response => {
+            return response.body.id
+        })
+}
+
+module.exports = { getAccessToken, postAddress, postCostumer }

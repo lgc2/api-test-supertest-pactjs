@@ -42,7 +42,7 @@ describe('Addresses Resource', () => {
             })
     })
 
-    it('(E2E) should list all addresses', async () => {
+    it('(E2E) should list addresses', async () => {
 
         await req(API_URL)
             .get('/addresses')
@@ -50,6 +50,7 @@ describe('Addresses Resource', () => {
             .then(response => {
                 expect(response.statusCode).toEqual(200)
                 expect(response.body).toBeInstanceOf(Array)
+                expect(JSON.stringify(response.body)).toContain(addressId)
             })
     })
 
