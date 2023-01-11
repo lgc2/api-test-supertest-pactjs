@@ -4,7 +4,6 @@ const API_URL = process.env.API_URL
 
 describe('Customers Resource', () => {
     let token
-    let customerId
 
     const address1 = `Vancouver Street, ${Math.floor(Math.random() * 10000)}`
     const address2 = `Toronto Street, ${Math.floor(Math.random() * 10000)}`
@@ -50,7 +49,7 @@ describe('Customers Resource', () => {
             })
     })
 
-    it('(E2E) should list customers', async () => {
+    it('(Healthcheck) should list customers', async () => {
         const adressId = await postAddress(token, address1, address2, city, state, zip)
         const customerId = await postCostumer(token, adressId, email, firstname, lastname, phone)
 
@@ -64,8 +63,83 @@ describe('Customers Resource', () => {
             })
     })
 
-    // it('skip', () => {
-    //     console.log(token)
-    // });
+    it('(E2E) should list specific customer', async () => {
+        const adressId = await postAddress(token, address1, address2, city, state, zip)
+        const customerId = await postCostumer(token, adressId, email, firstname, lastname, phone)
 
+        await req(API_URL)
+            .get(`/customers/${customerId}`)
+            .set('Authorization', `Bearer ${token}`)
+            .then(response => {
+
+                expect(response.statusCode).toEqual(200)
+                expect(response.body).toBeInstanceOf(Object)
+                expect(response.body.address.id).toEqual(adressId)
+                expect(response.body.id).toEqual(customerId)
+                expect(response.body.email).toEqual(email)
+                expect(response.body.firstName).toEqual(firstname)
+                expect(response.body.lastName).toEqual(lastname)
+                expect(response.body.phone).toEqual(phone)
+
+            })
+    })
+
+    it('(E2E) should edit a customer', async () => {
+        const adressId = await postAddress(token, address1, address2, city, state, zip)
+        const customerId = await postCostumer(token, adressId, email, firstname, lastname, phone)
+
+        await req(API_URL)
+            .patch(`/customers/${customerId}`)
+            .send({
+                "address": {
+                    "id": adressId
+                },
+                "email": email,
+                "firstName": `Editado - ${firstname}`,
+                "lastName": `Editado - ${lastname}`,
+                "phone": phone
+            })
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${token}`)
+            .then(response => {
+
+                expect(response.statusCode).toEqual(200)
+                expect(response.body).toBeInstanceOf(Object)
+                expect(response.body.address.id).toEqual(adressId)
+                expect(response.body.id).toEqual(customerId)
+                expect(response.body.email).toEqual(email)
+                expect(response.body.firstName).toEqual(`Editado - ${firstname}`)
+                expect(response.body.lastName).toEqual(`Editado - ${lastname}`)
+                expect(response.body.phone).toEqual(phone)
+            })
+    })
+
+    it('(E2E) should remove a customer', async () => {
+        const adressId = await postAddress(token, address1, address2, city, state, zip)
+        const customerId = await postCostumer(token, adressId, email, firstname, lastname, phone)
+
+        await req(API_URL)
+            .delete(`/customers/${customerId}`)
+            .set('Authorization', `Bearer ${token}`)
+            .then(response => {
+
+                expect(response.statusCode).toEqual(200)
+                expect(response.body).toBeInstanceOf(Object)
+                expect(response.body.address.id).toEqual(adressId)
+                expect(response.body.id).toEqual(customerId)
+                expect(response.body.email).toEqual(email)
+                expect(response.body.firstName).toEqual(firstname)
+                expect(response.body.lastName).toEqual(lastname)
+                expect(response.body.phone).toEqual(phone)
+            })
+
+        await req(API_URL)
+            .get(`/customers/${customerId}`)
+            .set('Authorization', `Bearer ${token}`)
+            .then(response => {
+                expect(response.statusCode).toEqual(404)
+                expect(response.body).toBeInstanceOf(Object)
+                expect(response.body.message).toEqual(`No resource was found for {\"id\":\"${customerId}\"}`)
+            })
+    })
 })

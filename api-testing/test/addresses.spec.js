@@ -42,7 +42,8 @@ describe('Addresses Resource', () => {
             })
     })
 
-    it('(E2E) should list addresses', async () => {
+    it('(Healthcheck) should list addresses', async () => {
+        const getAdressId = await postAddress(token, address1, address2, city, state, zip)
 
         await req(API_URL)
             .get('/addresses')
@@ -50,7 +51,7 @@ describe('Addresses Resource', () => {
             .then(response => {
                 expect(response.statusCode).toEqual(200)
                 expect(response.body).toBeInstanceOf(Array)
-                expect(JSON.stringify(response.body)).toContain(addressId)
+                expect(JSON.stringify(response.body)).toContain(getAdressId)
             })
     })
 
