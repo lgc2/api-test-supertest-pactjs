@@ -23,7 +23,7 @@ describe('Consumer Test', () => {
                     method: 'POST',
                     path: '/graphql',
                     headers: {
-                        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjcyNjg5MjMxLCJleHAiOjE2NzI4NjIwMzF9.jENYhK92NNpLGBBkmbXhF9ya6x2cykNOOkHhSZJD2mk',
+                        Authorization: 'Bearer 1234',
                         "Content-Type": 'application/json'
                     },
                     body: {
@@ -42,7 +42,7 @@ describe('Consumer Test', () => {
                             "items": eachLike(
                                 {
                                     "createdAt": somethingLike("2021-11-21T19:57:22.221Z"),
-                                    "firstName": somethingLike("lg"),
+                                    "firstName": somethingLike("Ernesto"),
                                     "id": somethingLike("ckw9nw4h90000ouup31sak6l3"),
                                     "lastName": somethingLike("Barbosa"),
                                     "roles": ["user"],
@@ -72,7 +72,7 @@ describe('Consumer Test', () => {
             const { firstName, lastName } = response.data.data.items[1]
 
             expect(response.status).toEqual(200)
-            expect(firstName).toBe('lg')
+            expect(firstName).toBe('Ernesto')
             expect(lastName).toBe('Barbosa')
         })
     });
